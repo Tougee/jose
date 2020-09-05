@@ -18,6 +18,10 @@ void main() {
         if (a.type == 'oct') {
           expect((key.cryptoKeyPair.publicKey as SymmetricKey).keyValue,
               (keyPair.publicKey as SymmetricKey).keyValue);
+        } else if (a.type == 'OKP') {
+          var fromKeyPair = key.cryptoKeyPair;
+          expect((fromKeyPair.publicKey as EdDSAPublicKey).bytes, (keyPair.publicKey as EdDSAPublicKey).bytes);
+          expect((fromKeyPair.privateKey as EdDSAPrivateKey).bytes, (keyPair.privateKey as EdDSAPrivateKey).bytes);
         } else {
           expect(key.cryptoKeyPair.publicKey, keyPair.publicKey);
           expect(key.cryptoKeyPair.privateKey, keyPair.privateKey);

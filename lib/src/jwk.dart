@@ -60,7 +60,15 @@ class JsonWebKey extends JsonObject {
     if (publicKey == null && privateKey == null) {
       throw ArgumentError('Either publicKey or privateKey should be non null');
     }
-
+    if (privateKey is EdDSAPrivateKey) {
+      var x = privateKey.bytes.sublist(32);
+      var d = privateKey.bytes.sublist(0, 32);
+      return JsonWebKey.ed(
+        x: x,
+        d: d,
+        keyId: keyId
+      );
+    }
     if (privateKey is RsaPrivateKey) {
       if (publicKey != null && publicKey is! RsaPublicKey) {
         throw ArgumentError.value(
@@ -117,10 +125,28 @@ class JsonWebKey extends JsonObject {
           xCoordinate: publicKey.xCoordinate,
           yCoordinate: publicKey.yCoordinate);
     }
-
+    if (publicKey is EdDSAPublicKey) {
+      return JsonWebKey.ed(
+        x: publicKey.bytes
+      );
+    }
     throw UnsupportedError(
         'Public key of type ${publicKey.runtimeType} not supported');
   }
+
+  JsonWebKey.ed({
+    List<int>? x,
+    List<int>? d,
+    String? keyId,
+    String? algorithm
+  }) : this.fromJson({
+    'kty': 'OKP',
+    'crv': 'Ed25519',
+    if (x != null) 'x' : _bytesToBase64(x),
+    if (d != null) 'd' : _bytesToBase64(d),
+    if (keyId != null) 'kid': keyId,
+    if (algorithm != null) 'alg': algorithm
+  });
 
   /// Creates a JsonWebKey of type RSA
   JsonWebKey.rsa({

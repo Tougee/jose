@@ -7,10 +7,16 @@ environment:
   sdk: '>=2.12.0-0 <3.0.0'
 
 dependencies:
-  crypto_keys: ^0.2.0-nullsafety.2
+  crypto_keys:
+      git:
+        url: git@github.com:Tougee/crypto_keys.git
+        ref: feature/eddsa
   meta: ^1.1.6
   typed_data: ^1.0.0
-  x509: ^0.2.0-nullsafety.2
+  x509:
+      git:
+          url: git@github.com:Tougee/x509.git
+          ref: feature/eddsa
   http: ^0.13.0
   asn1lib: ^0.9.0-nullsafety.0
   collection: ^1.15.0-nullsafety.4

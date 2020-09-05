@@ -33,6 +33,12 @@ void main() {
               'e': 'AQAB',
               'alg': 'RS256',
               'kid': '2011-04-29'
+            },
+            {
+              'kty': 'OKP',
+              'crv': 'Ed25519',
+              'x': '11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo',
+              'alg': 'EdDSA'
             }
           ]
         };
@@ -49,10 +55,16 @@ void main() {
         expect(key2.keyId, '2011-04-29');
         expect(key2.algorithm, 'RS256');
 
+        var key3 = JsonWebKey.fromJson(json['keys']![2]);
+
+        expect(key3.keyType, 'OKP');
+        expect(key3.algorithm, 'EdDSA');
+
         var keySet = JsonWebKeySet.fromJson(json);
 
         expect(keySet.keys[0], key1);
         expect(keySet.keys[1], key2);
+        expect(keySet.keys[2], key3);
 
         expect(keySet.toJson(), json);
       });
@@ -101,6 +113,13 @@ void main() {
                   'yR8O55XLSe3SPmRfKwZI6yU24ZxvQKFYItdldUKGzO6Ia6zTKhAVRU',
               'alg': 'RS256',
               'kid': '2011-04-29'
+            },
+            {
+              'kty':'OKP',
+              'crv':'Ed25519',
+              'd':'nWGxne_9WmC6hEr0kuwsxERJxWl7MmkZcDusAxyuf2A',
+              'x':'11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo',
+              'alg': 'EdDSA'
             }
           ]
         };
@@ -117,10 +136,16 @@ void main() {
         expect(key2.keyId, '2011-04-29');
         expect(key2.algorithm, 'RS256');
 
+        var key3 = JsonWebKey.fromJson(json['keys']![2]);
+
+        expect(key3.keyType, 'OKP');
+        expect(key3.algorithm, 'EdDSA');
+
         var keySet = JsonWebKeySet.fromJson(json);
 
         expect(keySet.keys[0], key1);
         expect(keySet.keys[1], key2);
+        expect(keySet.keys[2], key3);
 
         expect(keySet.toJson(), json);
       });

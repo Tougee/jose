@@ -63,6 +63,7 @@ class JsonWebAlgorithm {
     es256,
     es384,
     es512,
+    eddsa,
 /*
     ps256,
     ps384,
@@ -117,6 +118,10 @@ class JsonWebAlgorithm {
   /// ECDSA using P-521 and SHA-512
   static const es512 =
       JsonWebAlgorithm('ES512', type: 'EC', use: 'sig', curve: 'P-521');
+
+  /// EDDSA using Ed25519
+  static const eddsa =
+    JsonWebAlgorithm('EdDSA', type: 'OKP', use: 'sig', curve: 'ed25519');
 
 /* TODO: not supported yet in crypto_keys
   /// RSASSA-PSS using SHA-256 and MGF1 with SHA-256
@@ -229,6 +234,10 @@ class JsonWebAlgorithm {
         'y': encodeBigInt((keyPair.publicKey as EcPublicKey).yCoordinate),
         'crv': curve,
       },
+      if (type == 'OKP') ...{
+        'x': (keyPair.publicKey as EdDSAPublicKey).bytes,
+        'd': (keyPair.privateKey as EdDSAPrivateKey).bytes.sublist(0, 32)
+      },
       'alg': name,
       'use': use,
       'keyOperations': keyOperations
@@ -249,6 +258,8 @@ class JsonWebAlgorithm {
         return KeyPair.generateRsa(bitStrength: _getKeyBitLength(keyBitLength));
       case 'EC':
         return KeyPair.generateEc(curvesByName[curve!]!);
+      case 'OKP':
+        return KeyPair.generateEdDSA();
     }
     throw UnsupportedError('Algorithms of type \'$type\' not supported');
   }
