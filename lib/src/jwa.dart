@@ -235,8 +235,8 @@ class JsonWebAlgorithm {
         'crv': curve,
       },
       if (type == 'OKP') ...{
-        'x': (keyPair.publicKey as EdDSAPublicKey).bytes,
-        'd': (keyPair.privateKey as EdDSAPrivateKey).bytes.sublist(0, 32)
+        'x': encodeBase64EncodedBytes((keyPair.publicKey as EdDSAPublicKey).bytes),
+        'd': encodeBase64EncodedBytes((keyPair.privateKey as EdDSAPrivateKey).bytes.sublist(0, 32)),
       },
       'alg': name,
       'use': use,
