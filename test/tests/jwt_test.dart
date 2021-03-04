@@ -1,8 +1,26 @@
+import 'package:jose/jose.dart';
 import 'package:test/test.dart';
 import 'package:jose/src/jwt.dart';
 import 'package:jose/src/jwk.dart';
 
 void main() {
+  test('JWT Examples from RFC8037', () {
+    var builder = JsonWebSignatureBuilder();
+    builder.setProtectedHeader('alg', 'EdDSA');
+    builder.stringContent = 'Example of Ed25519 signing';
+    var key = JsonWebKey.fromJson({
+      'kty': 'OKP',
+      'crv': 'Ed25519',
+      'd': 'nWGxne_9WmC6hEr0kuwsxERJxWl7MmkZcDusAxyuf2A',
+      'x': '11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo'
+    });
+    builder.addRecipient(key, algorithm: 'EdDSA');
+    var jws = builder.build();
+    var jwsCompact = jws.toCompactSerialization();
+    expect(jwsCompact,
+        'eyJhbGciOiJFZERTQSJ9.RXhhbXBsZSBvZiBFZDI1NTE5IHNpZ25pbmc.hgyY0il_MGCjP0JzlnLWG1PPOt7-09PGcvMg3AIbQR6dWbhijcNR4ki4iylGjg5BhVsPt9g7sVvpAr_MuM0KAg');
+  });
+
   group('JWT Examples from RFC7519', () {
     var context = JsonWebKeyStore()
       ..addKey(JsonWebKey.fromJson({
